@@ -1,0 +1,1 @@
+{{-- Footer is optional for admin panel --}}
