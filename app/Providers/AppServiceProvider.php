@@ -67,5 +67,8 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('admin.settings.profile-form', \Modules\Admin\Livewire\Settings\ProfileForm::class);
         Livewire::component('admin.settings.avatar-form', \Modules\Admin\Livewire\Settings\AvatarForm::class);
         Livewire::component('admin.settings.logo-form', \Modules\Admin\Livewire\Settings\LogoForm::class);
+
+        // Portfolio components
+        Livewire::component('projects-listing', \Modules\Portfolio\Livewire\Pages\ProjectsListing::class);
     }
 }

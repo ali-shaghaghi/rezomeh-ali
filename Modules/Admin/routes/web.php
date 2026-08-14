@@ -61,9 +61,15 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'admin'])->group(func
     Route::put('/users/{user}/role', [UserController::class, 'updateUserRole'])->name('users.role');
     Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
-    // Portfolio (stub)
-    Route::get('/portfolio', fn () => view('admin::stub'))->name('portfolio.index');
-    Route::get('/portfolio/categories', fn () => view('admin::stub'))->name('portfolio.categories');
+    // Portfolio
+    Route::get('/portfolio', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'index'])->name('portfolio.index');
+    Route::get('/portfolio/categories', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'index'])->name('portfolio.categories');
+    Route::get('/portfolio/create', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'create'])->name('portfolio.projects.create');
+    Route::post('/portfolio', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'store'])->name('portfolio.projects.store');
+    Route::get('/portfolio/{project}/edit', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'edit'])->name('portfolio.projects.edit');
+    Route::put('/portfolio/{project}', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'update'])->name('portfolio.projects.update');
+    Route::delete('/portfolio/{project}', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'destroy'])->name('portfolio.projects.destroy');
+    Route::get('/portfolio/{project}', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'show'])->name('portfolio.projects.show');
 
     // Blog (stub)
     Route::get('/blog', fn () => view('admin::stub'))->name('blog.index');
