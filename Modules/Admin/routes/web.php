@@ -61,9 +61,9 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'admin'])->group(func
     Route::put('/users/{user}/role', [UserController::class, 'updateUserRole'])->name('users.role');
     Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
-    // Portfolio (stub)
-    Route::get('/portfolio', fn () => view('admin::stub'))->name('portfolio.index');
-    Route::get('/portfolio/categories', fn () => view('admin::stub'))->name('portfolio.categories');
+    // Portfolio
+    Route::get('/portfolio', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'index'])->name('portfolio.index');
+    Route::get('/portfolio/categories', [\Modules\Portfolio\Http\Controllers\ProjectsController::class, 'index'])->name('portfolio.categories');
 
     // Blog (stub)
     Route::get('/blog', fn () => view('admin::stub'))->name('blog.index');
