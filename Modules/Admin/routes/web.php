@@ -7,6 +7,7 @@ use Modules\Admin\Http\Controllers\Auth\TwoFactorController;
 use Modules\Admin\Http\Controllers\Auth\PasswordResetController;
 use Modules\Admin\Http\Controllers\Auth\LogoutController;
 use Modules\Admin\Http\Controllers\Auth\SocialiteController;
+use Modules\Admin\Http\Controllers\UserController;
 
 // Auth Routes (Guest only)
 Route::prefix('admin')->name('admin.')->middleware(['web', 'guest'])->group(function () {
@@ -47,9 +48,18 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'admin'])->group(func
     // Logout
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-    // Users (stub)
-    Route::get('/users', fn () => view('admin::stub'))->name('users.index');
-    Route::get('/users/roles', fn () => view('admin::stub'))->name('users.roles');
+    // Users
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/roles', [UserController::class, 'roles'])->name('users.roles');
+    Route::post('/users/roles', [UserController::class, 'storeRole'])->name('users.roles.store');
+    Route::put('/users/roles/{role}', [UserController::class, 'updateRole'])->name('users.roles.update');
+    Route::delete('/users/roles/{role}', [UserController::class, 'destroyRole'])->name('users.roles.destroy');
+    Route::get('/users/online', [UserController::class, 'onlineUsers'])->name('users.online');
+    Route::get('/users/export', [UserController::class, 'export'])->name('users.export');
+    Route::post('/users/import', [UserController::class, 'import'])->name('users.import');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::put('/users/{user}/role', [UserController::class, 'updateUserRole'])->name('users.role');
+    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
     // Portfolio (stub)
     Route::get('/portfolio', fn () => view('admin::stub'))->name('portfolio.index');

@@ -23,5 +23,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
         ]);
+
+        // Seed dashboard data
+        $this->call([
+            DashboardSeeder::class,
+        ]);
     }
 }

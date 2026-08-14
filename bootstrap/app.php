@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \Modules\Core\Http\Middleware\AdminMiddleware::class,
             'role' => \Modules\Core\Http\Middleware\RoleMiddleware::class,
             'permission' => \Modules\Core\Http\Middleware\PermissionMiddleware::class,
+            'track-activity' => \Modules\Core\Http\Middleware\TrackUserActivity::class,
+        ]);
+
+        $middleware->web([
+            \Modules\Core\Http\Middleware\TrackUserActivity::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -13,6 +13,10 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        if (Permission::count() > 0) {
+            return; // Already seeded
+        }
+
         // Create Permissions
         $permissions = [
             // Users
@@ -50,6 +54,15 @@ class RolePermissionSeeder extends Seeder
 
             // Media
             ['name' => 'مدیریت رسانه', 'slug' => 'manage_media', 'group' => 'media'],
+
+            // Public Site
+            ['name' => 'مشاهده سایت', 'slug' => 'view_site', 'group' => 'public'],
+            ['name' => 'مشاهده مقالات سایت', 'slug' => 'view_site_blog', 'group' => 'public'],
+            ['name' => 'مشاهده پروژه‌های سایت', 'slug' => 'view_site_portfolio', 'group' => 'public'],
+            ['name' => 'ارسال سفارش', 'slug' => 'submit_order', 'group' => 'public'],
+            ['name' => 'ارسال تیکت', 'slug' => 'submit_ticket', 'group' => 'public'],
+            ['name' => 'مشاهده سفارشات من', 'slug' => 'view_my_orders', 'group' => 'public'],
+            ['name' => 'مشاهده تیکت‌های من', 'slug' => 'view_my_tickets', 'group' => 'public'],
         ];
 
         foreach ($permissions as $permission) {
@@ -79,6 +92,12 @@ class RolePermissionSeeder extends Seeder
             'name' => 'پشتیبانی',
             'slug' => 'support',
             'description' => 'دسترسی به تیکت‌ها و سفارشات',
+        ]);
+
+        $user = Role::create([
+            'name' => 'کاربر',
+            'slug' => 'user',
+            'description' => 'کاربر عادی سایت - مشاهده محتوا و ارسال سفارش',
         ]);
 
         // Assign Permissions to Roles
@@ -126,6 +145,19 @@ class RolePermissionSeeder extends Seeder
                 'manage_tickets',
                 'view_tickets',
                 'view_payments',
+            ])->get()
+        );
+
+        // User - Public site access
+        $user->permissions()->attach(
+            Permission::whereIn('slug', [
+                'view_site',
+                'view_site_blog',
+                'view_site_portfolio',
+                'submit_order',
+                'submit_ticket',
+                'view_my_orders',
+                'view_my_tickets',
             ])->get()
         );
     }
