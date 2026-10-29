@@ -10,14 +10,22 @@ use Illuminate\Support\Str;
 class OtpService
 {
     /**
+     * ساخت کلید کش بر اساس شناسه (مدل User یا رشته تلفن).
+     */
+    private function keyPart(User|string $identifier): string
+    {
+        return $identifier instanceof User ? (string) $identifier->id : $identifier;
+    }
+
+    /**
      * Generate OTP code for user.
      */
-    public function generate(User $user, string $type = 'login'): string
+    public function generate(User|string $identifier, string $type = 'login'): string
     {
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         // Store OTP in cache with expiration (store as ISO string, not Carbon object)
-        $key = "otp:{$user->id}:{$type}";
+        $key = 'otp:'.$this->keyPart($identifier).":{$type}";
         Cache::put($key, [
             'code' => Hash::make($code),
             'expires_at' => now()->addMinutes(5)->toIso8601String(),
@@ -30,9 +38,9 @@ class OtpService
     /**
      * Verify OTP code.
      */
-    public function verify(User $user, string $code, string $type = 'login'): bool
+    public function verify(User|string $identifier, string $code, string $type = 'login'): bool
     {
-        $key = "otp:{$user->id}:{$type}";
+        $key = 'otp:'.$this->keyPart($identifier).":{$type}";
         $otp = Cache::get($key);
 
         if (!$otp) {
@@ -68,19 +76,19 @@ class OtpService
     /**
      * Check if user can request new OTP (rate limiting).
      */
-    public function canRequest(User $user, string $type = 'login'): bool
+    public function canRequest(User|string $identifier, string $type = 'login'): bool
     {
-        $key = "otp:cooldown:{$user->id}:{$type}";
+        $key = 'otp:cooldown:'.$this->keyPart($identifier).":{$type}";
         return !Cache::has($key);
     }
 
     /**
      * Set cooldown for OTP request.
      */
-    public function setCooldown(User $user, string $type = 'login', int $seconds = 60): void
+    public function setCooldown(User|string $identifier, string $type = 'login', int $seconds = 60): void
     {
-        $key = "otp:cooldown:{$user->id}:{$type}";
-        $timeKey = "otp:cooldown_time:{$user->id}:{$type}";
+        $key = 'otp:cooldown:'.$this->keyPart($identifier).":{$type}";
+        $timeKey = 'otp:cooldown_time:'.$this->keyPart($identifier).":{$type}";
         Cache::put($key, true, now()->addSeconds($seconds));
         Cache::put($timeKey, now()->timestamp, now()->addSeconds($seconds));
     }
@@ -88,14 +96,14 @@ class OtpService
     /**
      * Get remaining cooldown time in seconds.
      */
-    public function getCooldownRemaining(User $user, string $type = 'login'): int
+    public function getCooldownRemaining(User|string $identifier, string $type = 'login'): int
     {
-        $key = "otp:cooldown:{$user->id}:{$type}";
+        $key = 'otp:cooldown:'.$this->keyPart($identifier).":{$type}";
         if (!Cache::has($key)) {
             return 0;
         }
         // Store creation time to calculate remaining
-        $timeKey = "otp:cooldown_time:{$user->id}:{$type}";
+        $timeKey = 'otp:cooldown_time:'.$this->keyPart($identifier).":{$type}";
         $startTime = Cache::get($timeKey, now()->subSeconds(60)->timestamp);
         $elapsed = now()->timestamp - $startTime;
         return max(0, 60 - $elapsed);

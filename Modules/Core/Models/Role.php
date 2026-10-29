@@ -26,11 +26,19 @@ class Role extends Model
     }
 
     /**
-     * Get the users for the role.
+     * Get the users for the role (فقط کاربران عادی — نقش «user»).
      */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_role');
+    }
+
+    /**
+     * Get the admins (کادر فنی) for the role — جدول admins / pivot admin_role.
+     */
+    public function admins(): BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\Admin::class, 'admin_role');
     }
 
     /**

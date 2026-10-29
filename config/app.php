@@ -61,11 +61,12 @@ return [
     |
     | Here you may specify the default timezone for your application, which
     | will be used by the PHP date and date-time functions. The timezone
-    | is set to "UTC" by default as it is suitable for most use cases.
+    | is set to "Asia/Tehran" — وقت ایران برای نمایش صحیح ساعت لاگ‌ها،
+    | تاریخ شمسی و اسلات‌های مشاوره. (قبلاً UTC بود و ۳:۳۰ اختلاف داشت.)
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tehran',
 
     /*
     |--------------------------------------------------------------------------
@@ -122,5 +123,17 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Service Providers
+    |--------------------------------------------------------------------------
+    |
+    | لیست سرویس‌فراهم‌کننده‌های ماژول‌ها در bootstrap/providers.php ثبت می‌شود.
+    | اینجا عمداً کلید 'providers' تعریف نشده تا لیست پیش‌فرض فریم‌ورک
+    | (شامل FoundationServiceProvider که MaintenanceMode را bind می‌کند
+    | و با حذفش کل سایت 500 می‌شد) حفظ شود و ماژول‌ها از bootstrap
+    | providers به آن merge شوند.
+    */
 
 ];

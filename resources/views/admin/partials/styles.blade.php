@@ -2,7 +2,7 @@
 
 <script>
     (function () {
-        var theme = localStorage.getItem('theme');
+        var theme = localStorage.getItem('theme') || localStorage.getItem('resume-theme');
         var dark =
             theme === 'dark' ||
             (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);

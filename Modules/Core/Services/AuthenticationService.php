@@ -2,20 +2,18 @@
 
 namespace Modules\Core\Services;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Models\LoginAttempt;
-use Modules\Core\Models\OtpCode;
-use App\Models\User;
 use Modules\Core\Services\Contracts\AuthServiceInterface;
-use Modules\Core\Services\OtpService;
 
 class AuthenticationService implements AuthServiceInterface
 {
     protected OtpService $otpService;
+
     protected TwoFactorService $twoFactorService;
 
     public function __construct(
@@ -38,7 +36,7 @@ class AuthenticationService implements AuthServiceInterface
         // Determine if credential is email or phone
         $user = $this->resolveUser($credential, $loginType);
 
-        if (!$user) {
+        if (! $user) {
             $this->logAttempt(null, $credential, $request, false, 'user_not_found');
             throw ValidationException::withMessages([
                 'credential' => 'کاربری با این مشخصات یافت نشد.',
@@ -46,7 +44,7 @@ class AuthenticationService implements AuthServiceInterface
         }
 
         // Check if user is active
-        if (!$user->is_active) {
+        if (! $user->is_active) {
             $this->logAttempt($user, $credential, $request, false, 'account_disabled');
             throw ValidationException::withMessages([
                 'credential' => 'حساب کاربری شما غیرفعال است.',
@@ -62,7 +60,7 @@ class AuthenticationService implements AuthServiceInterface
         }
 
         // Verify password
-        if (!Hash::check($password, $user->password)) {
+        if (! Hash::check($password, $user->password)) {
             $this->logAttempt($user, $credential, $request, false, 'invalid_password');
             throw ValidationException::withMessages([
                 'credential' => 'رمز عبور صحیح نیست.',
@@ -88,8 +86,9 @@ class AuthenticationService implements AuthServiceInterface
      */
     public function completeLogin(User $user, Request $request): void
     {
-        // Regenerate session
-        $request->session()->regenerate();
+        // Regenerate session (از helper session() استفاده می‌کنیم تا در همه زمینه‌ها —
+        // از جمله کامپوننت‌های Livewire — سشن در دسترس باشد)
+        session()->regenerate();
 
         // Login the user
         Auth::login($user, $request->boolean('remember'));
@@ -118,7 +117,7 @@ class AuthenticationService implements AuthServiceInterface
     {
         $user = $this->getUserByEmail($email);
 
-        if (!$user) {
+        if (! $user) {
             // Return true even if user doesn't exist to prevent email enumeration
             return true;
         }
@@ -141,7 +140,7 @@ class AuthenticationService implements AuthServiceInterface
         ]);
 
         // Verify OTP
-        if (!$this->otpService->verify($request->phone, $request->otp, 'password_reset')) {
+        if (! $this->otpService->verify($request->phone, $request->otp, 'password_reset')) {
             throw ValidationException::withMessages([
                 'otp' => 'کد بازیابی صحیح نیست یا منقضی شده است.',
             ]);
@@ -150,7 +149,7 @@ class AuthenticationService implements AuthServiceInterface
         // Find user and update password
         $user = $this->getUserByPhone($request->phone);
 
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -287,7 +286,7 @@ class AuthenticationService implements AuthServiceInterface
     /**
      * Log a login attempt.
      */
-    protected function logAttempt(?User $user, string $credential, Request $request, bool $isSuccessful, string $failureReason = null): void
+    protected function logAttempt(?User $user, string $credential, Request $request, bool $isSuccessful, ?string $failureReason = null): void
     {
         LoginAttempt::log([
             'user_id' => $user?->id,

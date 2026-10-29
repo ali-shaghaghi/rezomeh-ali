@@ -16,11 +16,12 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         if (!auth()->check()) {
-            return redirect()->route('admin.login');
+            return redirect()->route('auth.login');
         }
 
         if (!auth()->user()->hasAnyRole($roles)) {
-            abort(403, 'شما دسترسی به این بخش را ندارید.');
+            // قانون پروژه: به‌جای 403 فقط صفحه «یافت نشد» نمایش داده می‌شود
+            abort(404, 'چنین صفحه‌ای در سیستم وجود ندارد.');
         }
 
         return $next($request);

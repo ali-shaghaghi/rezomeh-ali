@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="@yield('meta-description', 'پنل ادمین')" />
     <title>@yield('title', 'پنل ادمین') | {{ config('app.name', 'AliShaghaghi') }}</title>
-    <link rel="icon" href="{{ asset('img/favicon.svg') }}" type="image/svg+xml" />
+    <link rel="icon" href="{{ site_favicon_url() }}" />
 
     @include('admin.partials.styles')
 

@@ -3,7 +3,6 @@
 namespace Modules\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Foundation\AliasLoader;
 
 abstract class BaseServiceProvider extends ServiceProvider
 {
@@ -27,10 +26,11 @@ abstract class BaseServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            module_config_path($this->moduleName(), 'config.php'),
-            strtolower($this->moduleName())
-        );
+        // فقط اگر ماژول فایل کانفیگ داشته باشد ادغام می‌شود
+        $configPath = module_config_path($this->moduleName(), 'config.php');
+        if (file_exists($configPath)) {
+            $this->mergeConfigFrom($configPath, strtolower($this->moduleName()));
+        }
     }
 
     /**
@@ -43,8 +43,8 @@ abstract class BaseServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                $viewPath => resource_path('views/vendor/' . strtolower($this->moduleName())),
-            ], strtolower($this->moduleName()) . '-views');
+                $viewPath => resource_path('views/vendor/'.strtolower($this->moduleName())),
+            ], strtolower($this->moduleName()).'-views');
         }
     }
 
@@ -67,8 +67,8 @@ abstract class BaseServiceProvider extends ServiceProvider
         $configPath = module_config_path($this->moduleName(), 'config.php');
         if (file_exists($configPath)) {
             $this->publishes([
-                $configPath => config_path(strtolower($this->moduleName()) . '.php'),
-            ], strtolower($this->moduleName()) . '-config');
+                $configPath => config_path(strtolower($this->moduleName()).'.php'),
+            ], strtolower($this->moduleName()).'-config');
         }
     }
 }

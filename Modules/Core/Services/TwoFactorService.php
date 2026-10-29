@@ -64,7 +64,7 @@ class TwoFactorService
      */
     public function verifyCode(User $user, string $code): bool
     {
-        return $this->otpService->verify($user->phone, $code, 'two_factor');
+        return $this->otpService->verify($user, $code, 'two_factor');
     }
 
     /**
@@ -72,7 +72,7 @@ class TwoFactorService
      */
     public function generateOtp(User $user): bool
     {
-        $otp = $this->otpService->generate($user->phone, 'two_factor', 6, 2);
+        $otp = $this->otpService->generate($user, 'two_factor');
 
         return $otp !== null;
     }
@@ -82,7 +82,7 @@ class TwoFactorService
      */
     public function canRequestOtp(User $user): bool
     {
-        return $this->otpService->canRequest($user->phone, 'two_factor');
+        return $this->otpService->canRequest($user, 'two_factor');
     }
 
     /**
@@ -90,7 +90,7 @@ class TwoFactorService
      */
     public function getCooldownRemaining(User $user): int
     {
-        return $this->otpService->getCooldownRemaining($user->phone, 'two_factor');
+        return $this->otpService->getCooldownRemaining($user, 'two_factor');
     }
 
     /**

@@ -2,6 +2,9 @@
 .DS_Store
 .env
 .env.backup
+
+# پک پشتیبان استقرار (دانلودشده از سرور — ۵۰MB+)
+/backup/
 .env.production
 .phpactor.json
 .phpunit.result.cache
@@ -34,3 +37,18 @@ __MACOSX/
 ehthumbs.db
 Desktop.ini
 PROJECT_BRAIN.md
+
+# فایل‌های مخصوص هاست/میزبان (از نسخهٔ سرور — روی هاست خودکار ساخته می‌شونشان)
+/database.sql
+/error_log
+/test-out*.txt
+/logtail.json
+/public/.user.ini
+/public/php.ini
+/public/.htaccess.local-backup-check
+/storage/framework/lsp-*.php
+
+# ابزارهای محلی و خروجی‌های تولیدشده (حجم بالا / دادهٔ محلی)
+/.claude/
+/graphify-out/
+/deploy/

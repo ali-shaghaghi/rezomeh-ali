@@ -8,9 +8,16 @@ export default {
     './Modules/*/Resources/**/*.blade.php',
     './Modules/*/Resources/**/*.js',
   ],
+  // رنگ‌های آیکون اعلان‌ها در سرویس NotificationService به‌صورت پویا ساخته می‌شوند
+  // (bg-{color}-100/text-{color}-600/dark:bg-{color}-900/40) — بدون safelist حذف می‌شوند
+  safelist: [
+    { pattern: /(bg|text)-(primary|amber|emerald|violet|cyan|slate)-(100|600)/ },
+    { pattern: /dark:bg-(primary|amber|emerald|violet|cyan|slate)-900\/40/ },
+  ],
   theme: {
     extend: {
       fontFamily: {
+        sans: ['Vazirmatn', 'Tahoma', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         vazir: ['Vazirmatn', 'Tahoma', 'sans-serif'],
       },
       colors: {

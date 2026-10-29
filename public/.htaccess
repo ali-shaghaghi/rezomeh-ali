@@ -5,13 +5,17 @@
 
     RewriteEngine On
 
+    # SEO: هدایت www به دامنه اصلی (301 - جلوگیری از محتوای تکراری)
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+    # SEO: حذف index.php از URL (301 - نسخه تکراری ایندکس نمی‌شود)
+    RewriteCond %{THE_REQUEST} \s/index\.php [NC]
+    RewriteRule ^index\.php(?:/(.*))?$ https://%{HTTP_HOST}/$1 [R=301,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-    # Handle X-XSRF-Token Header
-    RewriteCond %{HTTP:x-xsrf-token} .
-    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -22,4 +26,17 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+</IfModule>
+
+# توجه: بلوک cPanel (error_log) را خودِ cPanel بعد از فعال‌سازی MultiPHP INI
+# به‌صورت خودکار به انتهای این فایل اضافه می‌کند؛ دستی اضافه نکنید.
+<IfModule lsapi_module>
+   php_value error_log "/home/h439152/logs/php.error.log"
+   php_flag log_errors On
+</IfModule>
+# END cPanel-generated php ini directives, do not edit
+
+# HSTS — اجبار HTTPS در مرورگر برای یک سال (امنیت هدرها)
+<IfModule mod_headers.c>
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
 </IfModule>

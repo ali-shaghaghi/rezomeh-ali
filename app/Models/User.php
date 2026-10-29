@@ -3,16 +3,36 @@
 namespace App\Models;
 
 use Database\Factories\UserFactory;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Core\Models\Role;
 
-class User extends Authenticatable
+/**
+ * کاربر عادی سایت (جدول users).
+ *
+ * قانون معماری: این مدل هیچ‌گاه ارتقا سطح پیدا نمی‌کند — نقش بالاتر از «کاربر»
+ * نمی‌گیرد و اکسسور is_admin ندارد. ادمین/مشاور/ویرایشگر فقط در جدول admins.
+ */
+class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, MustVerifyEmail, Notifiable;
+
+    /**
+     * مقادیر پیش‌فرض ویژگی‌ها (پیش از ذخیره در دیتابیس نیز در دسترس‌اند).
+     * قابلیت‌های امنیتی به‌صورت پیش‌فرض غیرفعال‌اند.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'two_factor_enabled' => false,
+        'email_verification_enabled' => false,
+        'login_otp_enabled' => false,
+        'is_active' => true,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -31,6 +51,8 @@ class User extends Authenticatable
         'two_factor_enabled',
         'two_factor_secret',
         'two_factor_recovery_codes',
+        'email_verification_enabled',
+        'login_otp_enabled',
         'last_login_at',
         'last_login_ip',
         'is_active',
@@ -61,6 +83,8 @@ class User extends Authenticatable
             'last_login_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_enabled' => 'boolean',
+            'email_verification_enabled' => 'boolean',
+            'login_otp_enabled' => 'boolean',
             'is_active' => 'boolean',
         ];
     }
@@ -103,14 +127,6 @@ class User extends Authenticatable
     public function hasAnyPermission(array $permissions): bool
     {
         return $this->roles->flatMap->permissions->whereIn('slug', $permissions)->isNotEmpty();
-    }
-
-    /**
-     * Check if the user is an admin (any admin role).
-     */
-    public function getIsAdminAttribute(): bool
-    {
-        return $this->hasAnyRole(['super-admin', 'admin', 'editor', 'support']);
     }
 
     /**

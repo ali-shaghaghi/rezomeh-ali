@@ -2,73 +2,57 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
-use Modules\Core\Services\OtpService;
-use Modules\Core\Services\TwoFactorService;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        $this->registerServices();
+        //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         $this->registerModuleViews();
-        $this->registerLivewireComponents();
+        $this->registerAnonymousComponentPaths();
+        $this->registerLivewirePersistentMiddleware();
     }
 
-    /**
-     * Register service bindings.
-     */
-    protected function registerServices(): void
+    protected function registerLivewirePersistentMiddleware(): void
     {
-        $this->app->singleton(OtpService::class, fn () => new OtpService());
-        $this->app->singleton(TwoFactorService::class, fn ($app) => new TwoFactorService($app->make(OtpService::class)));
+        // درخواست‌های به‌روزرسانی Livewire (POST /livewire/update) مسیر اصلی کامپوننت را
+        // دوباره اجرا می‌کنند؛ بدون ثبت این میدلورها فقط GET اولیه محافظت می‌شد.
+        // عضویت در این لیست یعنی میدلور روی هر درخواست Livewire هم اعمال شود.
+        if (class_exists(\Livewire\Livewire::class)) {
+            \Livewire::addPersistentMiddleware([
+                \Modules\Core\Http\Middleware\AdminMiddleware::class,
+                \Modules\Core\Http\Middleware\RoleMiddleware::class,
+                \Modules\Core\Http\Middleware\PermissionMiddleware::class,
+            ]);
+        }
     }
 
-    /**
-     * Register module view namespaces.
-     */
     protected function registerModuleViews(): void
     {
-        $modules = ['Admin', 'Users', 'Portfolio', 'Orders', 'Blog', 'Tickets', 'Settings', 'Analytics', 'AI', 'Notifications', 'Payments'];
+        // نکته: ماژول‌های AdminPanel و Resume ویوهای خود را از طریق
+        // BaseServiceProvider (loadViewsFrom) با namespace اختصاصی ثبت می‌کنند؛
+        // این لیست فقط برای ماژول‌های اسکلتی است که Provider ندارند.
+        $modules = ['Core', 'Orders', 'Blog', 'Tickets', 'Settings', 'Analytics', 'AI', 'Notifications', 'Payments', 'Public'];
 
         foreach ($modules as $module) {
-            $viewPath = base_path("Modules/{$module}/Resources/views");
+            $viewPath = base_path("Modules/{$module}/Resources/Views");
             if (is_dir($viewPath)) {
                 View::addNamespace(strtolower($module), $viewPath);
             }
         }
     }
 
-    /**
-     * Register Livewire components from modules.
-     */
-    protected function registerLivewireComponents(): void
+    protected function registerAnonymousComponentPaths(): void
     {
-        // Auth components
-        Livewire::component('admin.auth.login-form', \Modules\Admin\Livewire\Auth\LoginForm::class);
-        Livewire::component('admin.auth.two-factor-form', \Modules\Admin\Livewire\Auth\TwoFactorForm::class);
-        Livewire::component('admin.auth.password-reset-form', \Modules\Admin\Livewire\Auth\PasswordResetForm::class);
-        Livewire::component('admin.auth.otp-verification', \Modules\Admin\Livewire\Auth\OtpVerification::class);
-        Livewire::component('admin.auth.change-password', \Modules\Admin\Livewire\Auth\ChangePassword::class);
-
-        // Settings components
-        Livewire::component('admin.settings.profile-form', \Modules\Admin\Livewire\Settings\ProfileForm::class);
-        Livewire::component('admin.settings.avatar-form', \Modules\Admin\Livewire\Settings\AvatarForm::class);
-        Livewire::component('admin.settings.logo-form', \Modules\Admin\Livewire\Settings\LogoForm::class);
-
-        // Portfolio components
-        Livewire::component('projects-listing', \Modules\Portfolio\Livewire\Pages\ProjectsListing::class);
+        // مسیر کامپوننت‌های anonymous — در Laravel 13 به‌صورت خودکار ثبت نمی‌شود
+        // و برای پیدا شدن <x-*> ها (مثل <x-public.layout>) باید صریح ثبت شود
+        Blade::anonymousComponentPath(resource_path('views/components'));
     }
 }
