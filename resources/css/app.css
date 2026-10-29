@@ -1,0 +1,980 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* فونت وزیرمتن — مرجع: rdawiki.com (rastikerdar/vazirmatn) */
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply font-vazir antialiased bg-surface-50 text-slate-800 dark:bg-surface-950 dark:text-slate-200;
+    font-family: 'Vazirmatn', Tahoma, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4 {
+    @apply text-slate-100;
+  }
+
+  /* ponytail: عناصر x-show قبل از لود شدن Alpine مخفی می‌شوند تا روی صفحه
+     فلش نزنند (شماره ۲۲ — پنل کاربری هنگام بارگذاری صفحه اصلی ظاهر و سپس
+     محو می‌شد). بدون این قانون x-cloak هیچ اثری ندارد. */
+  [x-cloak] {
+    display: none !important;
+  }
+
+  .dark input:not([type='checkbox']):not([type='radio']),
+  .dark select,
+  .dark textarea {
+    @apply border-slate-600 bg-surface-800 text-slate-200 placeholder:text-slate-500;
+    border-radius: 10px;
+  }
+
+  .dark input:not([type='checkbox']):not([type='radio']):focus,
+  .dark select:focus,
+  .dark textarea:focus {
+    @apply border-primary-500 bg-slate-700 outline-none ring-2 ring-primary-500/25;
+  }
+
+  .dark table thead {
+    @apply text-slate-400;
+  }
+
+  .dark table tbody {
+    @apply text-slate-300;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300 dark:bg-slate-600;
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-surface-900;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 transition-all duration-300 hover:bg-primary-50 hover:text-primary-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-primary-400;
+  }
+
+  .nav-link.active {
+    @apply bg-gradient-to-l from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30 dark:from-primary-600 dark:to-violet-600;
+  }
+
+  .stat-card {
+    @apply relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card transition-all duration-500 hover:-translate-y-1 hover:shadow-glow dark:border-slate-700/60 dark:bg-surface-800 dark:shadow-none dark:hover:shadow-lg dark:hover:shadow-primary-500/10;
+  }
+
+  .chart-card {
+    @apply rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card dark:border-slate-700/60 dark:bg-surface-800 dark:shadow-none;
+  }
+
+  .sidebar-overlay {
+    @apply fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden;
+  }
+
+  #sidebar {
+    @apply h-screen min-h-screen border-slate-200/80 bg-white/95 dark:border-slate-800 dark:bg-surface-900;
+  }
+
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.1s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.2s; }
+  .stagger-5 { animation-delay: 0.25s; }
+  .stagger-6 { animation-delay: 0.3s; }
+
+  .opacity-0-start {
+    opacity: 0;
+  }
+
+  .observe-in {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .observe-in.animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .dropdown-panel {
+    @apply invisible absolute top-full z-50 mt-2 min-w-[14rem] origin-top scale-95 rounded-xl border border-slate-200/90 bg-white py-1.5 opacity-0 shadow-card transition-all duration-200 dark:border-slate-600 dark:bg-surface-800 dark:shadow-xl dark:shadow-black/20;
+  }
+
+  .dropdown-panel.open {
+    @apply visible scale-100 opacity-100;
+  }
+
+  .dropdown-item {
+    @apply flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-600 transition hover:bg-primary-50 hover:text-primary-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-primary-400;
+  }
+
+  .dropdown-item.active {
+    @apply bg-primary-50 font-medium text-primary-600 dark:bg-primary-900/40 dark:text-primary-400;
+  }
+
+  .sidebar-dropdown-btn {
+    @apply flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 transition-all duration-300 hover:bg-primary-50 hover:text-primary-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-primary-400;
+  }
+
+  .sidebar-dropdown-btn.open {
+    @apply bg-primary-50 text-primary-600 dark:bg-slate-800 dark:text-primary-400;
+  }
+
+  .sidebar-dropdown-panel {
+    @apply grid max-h-0 grid-rows-[0fr] opacity-0 transition-all duration-300 ease-out;
+  }
+
+  .sidebar-dropdown-panel.open {
+    /* max-h-64 (16rem=256px) برای منوی رزومه با ۷ زیرمنو کافی نیست — بریده می‌شد */
+    @apply max-h-[32rem] grid-rows-[1fr] opacity-100;
+  }
+
+  .sidebar-dropdown-panel > div {
+    @apply overflow-hidden border-slate-200 dark:border-slate-700;
+  }
+
+  .sidebar-sublink {
+    @apply flex items-center gap-2 rounded-lg py-2.5 pr-4 text-sm text-slate-500 transition hover:bg-slate-100 hover:text-primary-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-primary-400;
+  }
+
+  .sidebar-sublink.active {
+    @apply bg-primary-50 font-medium text-primary-600 dark:bg-slate-800 dark:text-primary-400;
+  }
+
+  .text-muted {
+    @apply text-slate-500 dark:text-slate-400;
+  }
+
+  .icon-box {
+    @apply flex items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-900/50 dark:text-primary-400;
+  }
+
+}
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-gradient-to-l from-primary-500 to-violet-500 bg-clip-text text-transparent dark:from-primary-400 dark:to-violet-400;
+  }
+
+  .glass {
+    @apply border border-white/20 bg-white/70 backdrop-blur-xl dark:border-slate-700/50 dark:bg-surface-900/80;
+  }
+}
+
+/* ============================================================
+   استایل فرانت‌اند عمومی (ماژول Public — فاز ۱۱)
+   تبدیل‌شده از قالب res (Vite + Vanilla JS) به Blade
+   ============================================================ */
+
+@layer base {
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+    font-feature-settings: 'ss01';
+  }
+
+  ::selection {
+    @apply bg-primary-500/25 text-primary-900 dark:text-primary-100;
+  }
+}
+
+@layer components {
+  /* پس‌زمینه مشبک و اورب‌های شناور */
+  .bg-mesh {
+    @apply fixed inset-0 -z-20;
+    background-image:
+      linear-gradient(rgba(68, 76, 231, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(68, 76, 231, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 20%, transparent 70%);
+  }
+
+  .dark .bg-mesh {
+    background-image:
+      linear-gradient(rgba(128, 152, 249, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(128, 152, 249, 0.05) 1px, transparent 1px);
+  }
+
+  .bg-orbs {
+    @apply fixed inset-0 -z-10 overflow-hidden pointer-events-none;
+  }
+
+  .orb {
+    @apply absolute rounded-full blur-3xl;
+  }
+
+  .orb-1 {
+    @apply w-[min(520px,90vw)] h-[min(520px,90vw)] top-0 right-0 translate-x-1/4 -translate-y-1/4;
+    background: radial-gradient(circle, rgba(68, 76, 231, 0.22) 0%, transparent 70%);
+    animation: float 9s ease-in-out infinite;
+  }
+
+  .orb-2 {
+    @apply w-[min(420px,80vw)] h-[min(420px,80vw)] top-1/2 left-0 -translate-x-1/4 -translate-y-1/2;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.16) 0%, transparent 70%);
+    animation: float 11s ease-in-out infinite reverse;
+  }
+
+  .orb-3 {
+    @apply w-[min(300px,70vw)] h-[min(300px,70vw)] bottom-0 right-1/4 translate-y-1/4;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+    animation: float 8s ease-in-out infinite;
+    animation-delay: -4s;
+  }
+
+  /* نوار ناوبری شیشه‌ای */
+  .nav-bar {
+    @apply px-5 py-3 rounded-2xl
+      bg-white/70 dark:bg-slate-900/70
+      backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/50
+      shadow-card
+      transition-all duration-300;
+  }
+
+  .header-scrolled .nav-bar {
+    @apply border-primary-200/40 dark:border-primary-800/30;
+  }
+
+  .nav-logo {
+    @apply flex items-center gap-2 text-base font-bold
+      text-slate-900 dark:text-white transition-all duration-300 hover:text-primary-600 dark:hover:text-primary-400;
+  }
+
+  /* لینک‌های ناوبری فرانت (بازنویسی برای header فرانت) */
+  header .nav-link {
+    @apply px-3.5 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400
+      transition-all duration-300 inline-block
+      hover:text-primary-600 dark:hover:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-950/50;
+  }
+
+  header .nav-link-active {
+    @apply text-primary-600 dark:text-primary-300 bg-primary-50 dark:bg-primary-950/60;
+  }
+
+  .icon-btn {
+    @apply p-2.5 rounded-xl text-slate-600 dark:text-slate-300
+      bg-slate-100/80 dark:bg-slate-800/80
+      border border-slate-200/60 dark:border-slate-700/50
+      transition-all duration-300
+      hover:text-primary-600 dark:hover:text-primary-400
+      hover:border-primary-300 dark:hover:border-primary-700
+      hover:shadow-glow;
+  }
+
+  /* آیکون شبکه‌های اجتماعی زیر تصویر پروفایل در رزومه */
+  .social-icon-btn {
+    @apply flex items-center justify-center w-9 h-9 rounded-xl
+      text-slate-500 dark:text-slate-400
+      bg-slate-100/80 dark:bg-slate-800/80
+      border border-slate-200/60 dark:border-slate-700/50
+      transition-all duration-300
+      hover:text-primary-600 dark:hover:text-primary-400
+      hover:border-primary-300 dark:hover:border-primary-700
+      hover:-translate-y-1 hover:shadow-glow;
+  }
+
+  /* زیرمنوی کشویی هدر (انتخابگر زبان و حساب کاربری) */
+  .header-submenu-panel {
+    @apply rounded-xl border border-slate-200/90 bg-white py-1.5 shadow-card
+      dark:border-slate-600 dark:bg-surface-800;
+  }
+
+  .mobile-menu {
+    @apply rounded-2xl bg-white/90 dark:bg-slate-900/90
+      backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/50
+      shadow-card;
+    /* انیمیشن باز/بسته شدن نرم با grid-rows (بدون جهش ارتفاع) */
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.25s ease, visibility 0s linear 0.35s;
+  }
+
+  .mobile-menu.menu-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.25s ease, visibility 0s;
+  }
+
+  .mobile-menu > .mobile-nav-links {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* لینک‌ها یکی‌یکی با تاخیر پشت سر هم ظاهر می‌شوند (stagger) */
+  .mobile-menu .nav-link {
+    @apply opacity-0 -translate-y-2;
+    transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .mobile-menu.menu-open .nav-link {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .mobile-menu.menu-open li:nth-child(1) .nav-link { transition-delay: 0.06s; }
+  .mobile-menu.menu-open li:nth-child(2) .nav-link { transition-delay: 0.11s; }
+  .mobile-menu.menu-open li:nth-child(3) .nav-link { transition-delay: 0.16s; }
+  .mobile-menu.menu-open li:nth-child(4) .nav-link { transition-delay: 0.21s; }
+  .mobile-menu.menu-open li:nth-child(5) .nav-link { transition-delay: 0.26s; }
+  .mobile-menu.menu-open li:nth-child(6) .nav-link { transition-delay: 0.31s; }
+  .mobile-menu.menu-open li:nth-child(7) .nav-link { transition-delay: 0.36s; }
+  .mobile-menu.menu-open li:nth-child(8) .nav-link { transition-delay: 0.41s; }
+
+  /* آیکون دکمه منو: از همبرگر به ضربدر تبدیل می‌شود (heroicons، #۲۴) */
+  #mobile-menu-btn {
+    @apply relative;
+  }
+
+  /* هر دو آیکن انیمیشن نرم دارند */
+  #mobile-menu-btn .menu-icon-bars,
+  #mobile-menu-btn .menu-icon-x {
+    @apply transition-all duration-300;
+  }
+
+  #mobile-menu-btn .menu-icon-x {
+    @apply absolute inset-0 m-auto flex items-center justify-center;
+    opacity: 0;
+    transform: scale-0.5 rotate(90deg);
+  }
+
+  #mobile-menu-btn.menu-open .menu-icon-bars {
+    opacity: 0;
+    transform: scale-0.5 rotate(180deg);
+  }
+
+  #mobile-menu-btn.menu-open .menu-icon-x {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  /* ===== تنظیمات ادمین: انتخابگر تب‌های موبایل (دکمه تمام‌عرض + شورون چرخان) =====
+     پنل از همان انیمیشن grid-rows منوی موبایل صفحه اصلی استفاده می‌کند */
+
+  /* در دسکتاپ (لپ‌تاپ) دکمه موبایل مخفی و پنل تب‌ها همیشه باز است (سایدبار معمولی) */
+  @media (min-width: 1024px) {
+    .settings-tabs-panel.mobile-menu {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .settings-tabs-panel.mobile-menu .nav-link {
+      @apply opacity-100 translate-y-0;
+    }
+  }
+
+  /* کارت شیشه‌ای */
+  .glass-card {
+    @apply bg-white/80 dark:bg-slate-900/60
+      backdrop-blur-xl border border-slate-200/70 dark:border-slate-700/50
+      shadow-card rounded-2xl
+      transition-all duration-300;
+  }
+
+  .glass-card-hover {
+    @apply hover:shadow-card hover:border-primary-200/60
+      dark:hover:border-primary-700/40;
+  }
+
+  .section-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold
+      bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400
+      border border-primary-200/60 dark:border-primary-800/40 mb-4;
+  }
+
+  .section-title {
+    @apply text-3xl sm:text-4xl font-extrabold tracking-tight
+      text-slate-900 dark:text-white mb-3;
+  }
+
+  .section-subtitle {
+    @apply text-slate-500 dark:text-slate-400 text-base leading-relaxed mb-12 max-w-xl;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl
+      bg-primary-600 hover:bg-primary-500 text-white font-semibold text-sm
+      shadow-lg shadow-primary-600/20
+      transition-all duration-300
+      hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl
+      bg-white/80 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200
+      font-semibold text-sm border border-slate-200 dark:border-slate-700
+      transition-all duration-300
+      hover:border-primary-300 dark:hover:border-primary-600
+      hover:text-primary-600 dark:hover:text-primary-400
+      hover:-translate-y-0.5 active:scale-[0.98];
+  }
+
+  /* آمار hero فرانت (بازنویسی — استاتیک-کارد ادمین جدا است) */
+  #hero .stat-card,
+  section .stat-card.fw {
+    @apply bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/70 dark:border-slate-700/50 shadow-card rounded-2xl px-2 sm:px-5 py-4 text-center min-w-0 overflow-hidden;
+  }
+
+  .stat-value {
+    @apply text-2xl font-extrabold text-primary-600 dark:text-primary-400;
+  }
+
+  .stat-label {
+    @apply text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 leading-tight;
+  }
+
+  .skill-tag {
+    @apply inline-flex items-center px-4 py-2 rounded-xl text-sm font-medium
+      bg-white dark:bg-slate-800/80 text-slate-700 dark:text-slate-300
+      border border-slate-200/80 dark:border-slate-700/60
+      transition-all duration-300 hover:border-primary-300 dark:hover:border-primary-600
+      hover:text-primary-600 dark:hover:text-primary-400 hover:-translate-y-0.5 hover:shadow-glow;
+  }
+
+  .progress-bar {
+    @apply h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full bg-gradient-to-l from-primary-500 to-violet-500 transition-all duration-1000 ease-out;
+    width: 0;
+  }
+
+  .progress-fill.animate {
+    width: var(--progress);
+  }
+
+  .timeline-line {
+    @apply absolute top-2 bottom-0 right-[15px] w-px bg-slate-200 dark:bg-slate-700;
+  }
+
+  .timeline-dot {
+    @apply absolute right-[9px] top-7 w-3.5 h-3.5 rounded-full
+      bg-primary-500 ring-4 ring-white dark:ring-[#0a0a0f]
+      transition-all duration-300;
+  }
+
+  /* در زبان انگلیسی (LTR) خط و نقطه‌های تایم‌لاین به سمت چپ منتقل می‌شوند */
+  [dir="ltr"] .timeline-line {
+    @apply right-auto left-[15px];
+  }
+
+  [dir="ltr"] .timeline-dot {
+    @apply right-auto left-[9px];
+  }
+
+  .reveal {
+    @apply opacity-0 translate-y-6 transition-all duration-700 ease-out;
+  }
+
+  .reveal.visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .project-card {
+    @apply glass-card-hover overflow-hidden;
+  }
+
+  .project-image-wrap {
+    @apply relative overflow-hidden h-52;
+  }
+
+  .project-image {
+    @apply w-full h-full object-cover transition-all duration-500 group-hover:scale-105;
+  }
+
+  .project-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent
+      opacity-0 group-hover:opacity-100 transition-all duration-300
+      flex flex-col justify-end p-6;
+  }
+
+  /* کارت مقاله وبلاگ (فرانت عمومی) */
+  .post-card {
+    @apply glass-card-hover overflow-hidden flex flex-col;
+  }
+
+  .post-card-image {
+    @apply relative overflow-hidden h-44 shrink-0 bg-slate-100 dark:bg-slate-800;
+  }
+
+  .profile-wrap {
+    @apply relative overflow-hidden p-3 max-w-full;
+  }
+
+  .profile-ring {
+    @apply absolute inset-2 rounded-3xl border-2 border-dashed border-primary-300/40 dark:border-primary-600/30 pointer-events-none;
+    animation: spin 20s linear infinite;
+  }
+
+  .status-badge {
+    @apply absolute top-1 left-1 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold z-10
+      bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400
+      border border-emerald-200 dark:border-emerald-800 shadow-sm;
+  }
+
+  .status-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse;
+  }
+
+  /* تایپ‌رایتر hero */
+  .typewriter-cursor::after {
+    content: '▋';
+    @apply text-primary-500 mr-0.5 text-lg;
+    animation: blink 0.9s step-end infinite;
+  }
+
+  .hero-item {
+    opacity: 0;
+    animation: fadeInUp 0.7s ease-out forwards;
+  }
+
+  .hero-delay-1 { animation-delay: 0.1s; }
+  .hero-delay-2 { animation-delay: 0.2s; }
+  .hero-delay-3 { animation-delay: 0.35s; }
+  .hero-delay-4 { animation-delay: 0.5s; }
+  .hero-delay-5 { animation-delay: 0.65s; }
+
+  .gradient-text-fw {
+    @apply bg-gradient-to-l from-primary-600 via-primary-500 to-violet-500 bg-clip-text text-transparent;
+  }
+
+  /* محتوای مقاله وبلاگ */
+  .prose-public {
+    @apply text-slate-700 dark:text-slate-300 leading-[2] text-[15px];
+  }
+
+  .prose-public h2,
+  .prose-public h3 {
+    @apply font-bold text-slate-900 dark:text-white mt-8 mb-4;
+  }
+
+  .prose-public h2 { @apply text-2xl; }
+  .prose-public h3 { @apply text-xl; }
+
+  .prose-public p { @apply mb-4; }
+
+  .prose-public a {
+    @apply text-primary-600 dark:text-primary-400 hover:underline;
+  }
+
+  .prose-public ul,
+  .prose-public ol {
+    @apply list-disc pr-6 mb-4 space-y-2;
+  }
+
+  .prose-public ol { @apply list-decimal; }
+
+  .prose-public blockquote {
+    @apply border-r-4 border-primary-400 pr-4 py-2 my-4 rounded-l-xl bg-primary-50/50 dark:bg-primary-950/30 text-slate-600 dark:text-slate-300;
+  }
+
+  .prose-public pre {
+    @apply rounded-xl p-4 text-sm overflow-x-auto bg-slate-900 text-slate-100 my-4;
+  }
+
+  .prose-public code {
+    @apply text-primary-600 dark:text-primary-400 text-[13px];
+  }
+
+  .prose-public pre code { @apply text-slate-100; }
+
+  .prose-public img {
+    @apply rounded-xl my-4;
+  }
+
+  .prose-public table {
+    @apply w-full mb-4;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ===== ماژول محصولات: سبد خرید + checkout ===== */
+
+/* badge تعداد سبد در هدر */
+.cart-badge {
+  @apply absolute -top-1 -left-1 flex h-5 min-w-[1.25rem] items-center justify-center
+    rounded-full bg-rose-500 px-1 text-[10px] font-black text-white
+    ring-2 ring-white dark:ring-surface-900;
+  animation: pop 0.3s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* کشوی سبد — از سمت چپ باز می‌شود (RTL) */
+.cart-drawer {
+  will-change: transform;
+}
+
+/* ===== Progress Stepper — checkout ۴ مرحله‌ای ===== */
+.checkout-step-btn {
+  @apply border-2 border-slate-200 bg-white text-slate-500
+    dark:border-slate-700 dark:bg-surface-800 dark:text-slate-400;
+}
+
+.checkout-step-idle {
+  @apply cursor-not-allowed opacity-70;
+}
+
+.checkout-step-done {
+  @apply border-primary-500 bg-primary-500 text-white shadow-lg shadow-primary-500/30;
+}
+
+/* گام فعال: درخشش + انیمیشن پالس */
+.checkout-step-active {
+  @apply border-primary-500 bg-gradient-to-br from-primary-500 to-violet-500
+    text-white shadow-glow scale-110;
+  animation: stepGlow 2s ease-in-out infinite;
+}
+
+@keyframes stepGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+}
+
+.checkout-step-line {
+  @apply transition-all duration-500;
+}
+
+/* ===== بنر سفارش پروژه: گرادیان متحرک ===== */
+.animate-gradient-pan {
+  background-size: 200% 200%;
+  animation: gradientPan 12s ease-in-out infinite;
+}
+
+@keyframes gradientPan {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.gradient-text-white {
+  @apply bg-gradient-to-br from-white via-white to-white/70 bg-clip-text text-transparent;
+}
+
+/* ===== کارت محصول — hover_lift ===== */
+.product-card {
+  @apply transition-all duration-300;
+}
+.product-card:hover {
+  @apply -translate-y-1 shadow-glow;
+}
+
+/* ============================================================
+   بنر تبلیغاتی مارکی بی‌پایان — قبل از فوتر، همه صفحات عمومی
+   ارتفاع ≤ 100px | حرکت روان ریلی | حلقه seamless (دو کپی محتوا)
+   ============================================================ */
+.marquee-banner {
+  @apply relative flex h-20 items-center justify-center overflow-hidden
+    border-y border-primary-100/60
+    bg-gradient-to-l from-primary-50/80 via-white/70 to-violet-50/80
+    dark:border-primary-900/40
+    dark:from-primary-950/40 dark:via-surface-900/70 dark:to-violet-950/40
+    backdrop-blur-sm sm:h-24;
+}
+
+/* ریل متحرک — dir=ltr تا حلقه translateX(-50%) همیشه seamless باشد */
+.marquee-track {
+  @apply absolute inset-0 flex h-full w-max items-center;
+  direction: ltr;
+  animation: marquee-scroll 32s linear infinite;
+  will-change: transform;
+  /* محو تدریجی لبه‌ها — حس ورود/خروج بی‌نهایت */
+  mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+}
+
+.marquee-banner:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-content {
+  @apply flex h-full shrink-0 items-center;
+}
+
+.marquee-item {
+  @apply flex items-center gap-2 whitespace-nowrap px-5 text-sm font-semibold
+    text-slate-600 dark:text-slate-300;
+}
+
+.marquee-item-icon {
+  @apply text-lg;
+}
+
+.marquee-sep {
+  @apply text-xs text-primary-400/70 dark:text-primary-500/70;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* CTA شناور وسط ریلی — قابل خواندن و کلیک */
+.marquee-cta {
+  @apply relative z-10 flex items-center gap-2 whitespace-nowrap rounded-full
+    bg-primary-600 px-3.5 py-1.5 text-[11px] font-bold text-white
+    shadow-lg shadow-primary-600/30 transition-all duration-300
+    hover:bg-primary-500 hover:shadow-glow sm:px-5 sm:py-2 sm:text-sm;
+}
+
+.marquee-cta-dot {
+  @apply h-1.5 w-1.5 rounded-full bg-white/90 animate-pulse;
+}
+
+/* احترام به تنظیم کاهش حرکت کاربر */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ===== تصاویر درون‌متنی مقاله/توضیحات محصول (لایوت‌های کامل/نصف-چپ/نصف-راست) =====
+   توکن داخل متن: [[media|full|storage/inline/x.jpg]] → کلاس uc-media-full
+   نیم‌صفحه‌ها float می‌کنند تا متن کنار تصویر جریان یابد (در fa و en یکسان) */
+.uc-media {
+  margin: 1.25rem 0;
+}
+
+.uc-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  border: 1px solid rgb(15 23 42 / 0.08);
+}
+
+.dark .uc-media img {
+  border-color: rgb(148 163 184 / 0.18);
+}
+
+/* حالت اول: عریض و کامل */
+.uc-media-full {
+  width: 100%;
+  clear: both;
+}
+
+/* حالت دوم: نصف صفحه — چپ (متن در کنار/سمت راست جریان می‌یابد) */
+.uc-media-left {
+  float: left;
+  width: 48%;
+  margin: 0.5rem 1.25rem 1rem 0;
+}
+
+/* حالت سوم: نصف صفحه — راست (متن در کنار/سمت چپ جریان می‌یابد) */
+.uc-media-right {
+  float: right;
+  width: 48%;
+  margin: 0.5rem 0 1rem 1.25rem;
+}
+
+/* محتوای دارای تصویر شناور را در خود نگه می‌دارد تا به بخش بعدی نشت نکند */
+.uc-content,
+.prose-public {
+  display: flow-root;
+}
+
+/* حالت چهارم: وسط‌چین — تصویر وسط‌چین؛ متن بالا و پایینش جریان می‌یابد */
+.uc-media-center {
+  clear: both;
+  width: 72%;
+  margin-inline: auto;
+}
+
+/* ===== ویرایشگر متن حرفه‌ای (Quill) در پنل ادمین =====
+   نوار ابزار و سطح ویرایش با تم پنل (روز/شب) هماهنگ می‌شود؛ جهت متن با dir فرم. */
+.uc-rich-editor .ql-toolbar.ql-snow {
+  border: 0;
+  border-bottom: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252 / 0.9);
+  font-family: inherit;
+  padding: 8px 12px;
+}
+
+.uc-rich-editor .ql-container.ql-snow {
+  border: 0;
+  font-family: inherit;
+}
+
+.uc-rich-editor .ql-editor {
+  display: flow-root; /* نگه‌داشتن float تصاویر داخل ویرایشگر */
+  font-size: 0.9rem;
+  line-height: 1.9;
+  min-height: 220px;
+  padding: 14px 16px;
+}
+
+/* چیدمان RTL/LTR هم‌جهت با زبان فرم */
+.uc-rich-editor[dir='rtl'] .ql-toolbar.ql-snow {
+  direction: rtl;
+}
+
+.uc-rich-editor[dir='rtl'] .ql-editor {
+  direction: rtl;
+  text-align: right;
+}
+
+.uc-rich-editor[dir='ltr'] .ql-editor {
+  direction: ltr;
+  text-align: left;
+}
+
+/* تصاویر داخل ویرایشگر با همان لایوت خروجی نهایی رندر می‌شوند (WYSIWYG) */
+.uc-rich-editor .ql-editor figure.uc-media {
+  cursor: pointer;
+}
+
+.uc-rich-editor .ql-editor figure.uc-media:hover {
+  outline: 2px dashed rgb(14 165 233 / 0.55);
+  outline-offset: 2px;
+}
+
+/* تم تاریک پنل ادمین */
+.dark .uc-rich-editor .ql-toolbar.ql-snow {
+  background: rgb(15 23 42 / 0.6);
+  border-bottom-color: rgb(51 65 85);
+}
+
+.dark .uc-rich-editor .ql-snow .ql-stroke {
+  stroke: #94a3b8;
+}
+
+.dark .uc-rich-editor .ql-snow .ql-fill,
+.dark .uc-rich-editor .ql-snow .ql-stroke.ql-fill {
+  fill: #94a3b8;
+}
+
+.dark .uc-rich-editor .ql-snow .ql-picker {
+  color: #94a3b8;
+}
+
+.dark .uc-rich-editor .ql-snow .ql-picker-options {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.dark .uc-rich-editor .ql-editor {
+  color: #e2e8f0;
+}
+
+.dark .uc-rich-editor .ql-editor.ql-blank::before {
+  color: #64748b;
+  font-style: normal;
+}

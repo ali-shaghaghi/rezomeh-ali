@@ -1,0 +1,46 @@
+# وابستگی‌ها
+/node_modules
+/vendor
+/public/hot
+/public/storage
+
+# محیط و اسرار
+.env
+.env.backup
+.env.production
+/auth.json
+
+# رسانه‌های آپلودشده — دادهٔ هر سایت جداگانه است و در مخزن نیست
+/storage/app/public/*
+!/storage/app/public/.gitignore
+/storage/app/livewire-tmp/
+/storage/app/gallery/
+/storage/app/private/*
+!/storage/app/private/.gitignore
+
+# لاگ‌ها
+*.log
+/storage/*.key
+/storage/pail
+
+# فایل‌های IDE و سیستمی
+/.idea
+/.vscode
+/.cursor
+/.phpunit.cache
+.phpunit.result.cache
+Thumbs.db
+.DS_Store
+._*
+__MACOSX/
+Desktop.ini
+
+# فایل‌های مخصوص هاست (توسط cPanel ساخته می‌شوند)
+/public/.user.ini
+/public/php.ini
+
+# دامپ دیتابیس و پک‌های استقرار (هرگز کامیت نشوند)
+/database.sql
+/error_log
+/backup/
+/deploy/
