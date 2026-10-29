@@ -1,0 +1,1 @@
+{"status":1,"messages":null,"metadata":{},"data":{"uploads":[{"status":1,"file":"home.blade.php","warnings":[],"size":28142,"reason":"Upload of “home.blade.php” succeeded."}],"succeeded":1,"failed":0,"warned":0},"errors":null,"warnings":null}
