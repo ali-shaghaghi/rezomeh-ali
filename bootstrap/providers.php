@@ -20,6 +20,7 @@ use Modules\Tickets\Providers\TicketsServiceProvider;
 use Modules\Users\Providers\UsersServiceProvider;
 use Modules\UserPanel\Providers\UserPanelServiceProvider;
 use Modules\SEO\Providers\SeoServiceProvider;
+use Modules\AI\Providers\AiServiceProvider;
 use Modules\Gallery\Providers\GalleryServiceProvider;
 
 return [
@@ -43,5 +44,6 @@ return [
     AnalyticsServiceProvider::class,
     NotificationsServiceProvider::class,
     SeoServiceProvider::class,
+    AiServiceProvider::class,
     GalleryServiceProvider::class,
 ];

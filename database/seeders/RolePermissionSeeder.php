@@ -79,6 +79,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'مدیریت تنظیمات', 'slug' => 'manage_settings', 'group' => 'settings'],
 
             // AI
+            ['name' => 'مدیریت هوش مصنوعی', 'slug' => 'manage_ai', 'group' => 'ai'],
 
             // Reports
             ['name' => 'مشاهده گزارش‌ها', 'slug' => 'view_reports', 'group' => 'analytics'],

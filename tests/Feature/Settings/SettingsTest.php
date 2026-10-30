@@ -91,6 +91,7 @@ class SettingsTest extends TestCase
         $this->assertArrayHasKey('site', $schema);
         $this->assertArrayHasKey('smtp', $schema);
         $this->assertArrayHasKey('payment', $schema);
+        $this->assertArrayHasKey('ai', $schema);
         $this->assertArrayHasKey('social', $schema);
     }
 
@@ -145,6 +146,7 @@ class SettingsTest extends TestCase
         $this->get('/admin/settings/site')->assertOk();
         $this->get('/admin/settings/smtp')->assertOk();
         $this->get('/admin/settings/payment')->assertOk();
+        $this->get('/admin/settings/ai')->assertOk();
         $this->get('/admin/settings/social')->assertOk();
         $this->get('/admin/settings/security')->assertOk();
     }

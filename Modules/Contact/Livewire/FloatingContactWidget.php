@@ -6,7 +6,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Modules\Contact\Models\ChatConversation;
 use Modules\Contact\Models\ChatMessage;
-use Modules\Contact\Services\BotReplyService;
+use Modules\Contact\Services\AiChatService;
 use Modules\Contact\Services\ContactService;
 
 /**
@@ -229,7 +229,7 @@ class FloatingContactWidget extends Component
             ])
             ->all();
 
-        $reply = app(BotReplyService::class)->reply($text);
+        $reply = app(AiChatService::class)->reply($text, $history);
 
         ChatMessage::create([
             'conversation_id' => $conv->id,

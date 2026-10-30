@@ -27,5 +27,5 @@ Route::prefix('admin/settings')
         // تب فعال از طریق URL — ?tab= در کامپوننت هم پشتیبانی می‌شود
         Route::get('/{group}', [SettingsController::class, 'index'])
             ->name('group')
-            ->whereIn('group', ['site', 'profile', 'appearance', 'security', 'smtp', 'payment', 'payment_extended', 'contact', 'sms', 'consultation', 'social']);
+            ->whereIn('group', ['site', 'profile', 'appearance', 'security', 'smtp', 'payment', 'payment_extended', 'contact', 'sms', 'consultation', 'ai', 'social']);
     });

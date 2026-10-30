@@ -153,6 +153,21 @@ class SettingsService
                     'consultation_sms_notify' => ['label' => 'ارسال پیامک اطلاع‌رسانی رزرو', 'type' => 'boolean', 'default' => true],
                 ],
             ],
+            'ai' => [
+                'title' => 'هوش مصنوعی',
+                'short' => 'هوش مصنوعی',
+                'icon' => 'analytics',
+                'fields' => [
+                    'ai_enabled' => ['label' => 'فعال‌سازی هوش مصنوعی برای چت آنلاین', 'type' => 'boolean', 'default' => false],
+                    'ai_provider' => ['label' => 'سرویس‌دهنده', 'type' => 'select', 'options' => ['none' => 'غیرفعال (پاسخ از پیش تعریف‌شده)', 'openai' => 'OpenAI (و سازگارها)', 'gemini' => 'Google Gemini'], 'default' => 'none'],
+                    'ai_api_key' => ['label' => 'کلید API', 'type' => 'password', 'default' => ''],
+                    'ai_model' => ['label' => 'مدل', 'type' => 'text', 'default' => 'gpt-4o-mini'],
+                    'ai_base_url' => ['label' => 'آدرس API (اختیاری — برای Azure/DeepSeek/...', 'type' => 'text', 'default' => 'https://api.openai.com/v1'],
+                    'ai_temperature' => ['label' => 'خلاقیت پاسخ (0 تا 2)', 'type' => 'number', 'default' => '0.7'],
+                    // دستورالعمل و نقش ربات — متن کامل system prompt قابل ویرایش توسط ادمین
+                    'ai_system_prompt' => ['label' => 'دستورالعمل و نقش ربات (System Prompt)', 'type' => 'textarea', 'default' => '', 'help' => 'نقش، لحن، قوانین و نحوه پاسخ‌دهی ربات را بنویسید. متغیرهای قابل استفاده: {site_title} {site_description} {contact_email} {contact_phone} {telegram} {whatsapp} {instagram} {linkedin} {github}'],
+                ],
+            ],
             'social' => [
                 'title' => 'شبکه‌های اجتماعی',
                 'short' => 'شبکه‌های اجتماعی',
